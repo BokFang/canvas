@@ -1,7 +1,6 @@
 var board = document.getElementById("canvas");
 var context = board.getContext("2d");
 var lastPoint = {x:undefined,y:undefined}
-var painting = false;
 fullScreen();
 window.onresize = function(){
   fullScreen();
@@ -17,30 +16,42 @@ function drawCircle(x,y,R){
   context.arc(x, y, R, 0, 2 * Math.PI);
   context.fill();
 }
+var using = false;
 //按下鼠标
 board.onmousedown = function(a){
-  painting = true;
   var x = a.clientX;
   var y = a.clientY;
-  drawCircle(x,y,1);
-  lastPoint = {"x":x,"y":y}
+  if(eraserEnabled){
+    using = true;
+    context.clearRect(x-5,y-5,10,10);
+  }else{
+    using = true;
+    drawCircle(x,y,1);
+    lastPoint = {"x":x,"y":y}
+  }
 }
 //动鼠标
 board.onmousemove = function(a){
-  if(painting){
-    painting = true;
-    var x = a.clientX;
-    var y = a.clientY;
-    var newPoint = {"x":x,"y":y}
-    drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
-    lastPoint = newPoint;
+  var x = a.clientX;
+  var y = a.clientY;
+  if(eraserEnabled){
+    if(using){
+      context.clearRect(x-5,y-5,10,10);
+    }
   }else{
-
+    if(using){
+      using = true;
+      var newPoint = {"x":x,"y":y}
+      drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
+      lastPoint = newPoint;
+    }else{
+  
+    }
   }
-}
+  }
 //松开鼠标
 board.onmouseup = function(a){
-  painting = false;
+  using = false;
 }
 function drawLine(x1,y1,x2,y2){
   context.beginPath();
@@ -50,5 +61,9 @@ function drawLine(x1,y1,x2,y2){
   context.stroke();
   context.closePath();
 }
-
+var eraser = document.getElementById('eraser');
+var eraserEnabled = false;
+eraser.onclick = function(){
+  eraserEnabled = !eraserEnabled;
+}
 
