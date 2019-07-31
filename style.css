@@ -5,8 +5,20 @@
 #canvas{
   background: #04f7ff;
 }
-#eraser{
+.actions{
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
+}
+.actions > #eraser{
+  display: inline-block;
+}
+.actions > #pen{
+  display: none;
+}
+.actions.x > #pen{
+  display: inline-block;
+}
+.actions.x > #eraser{
+  display: none;
 }
