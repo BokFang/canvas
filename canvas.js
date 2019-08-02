@@ -1,7 +1,7 @@
 var board = document.getElementById("canvas");
 var context = board.getContext("2d");
 autoCanvasSet(board);
-mouseListening(board);
+userListening(board);
 model(board);
 function drawCircle(x,y,R){
   context.beginPath();
@@ -18,37 +18,74 @@ function drawLine(x1,y1,x2,y2){
 }
 var using = false;
 var lastPoint = {x:undefined,y:undefined}
-function mouseListening(board){
-  //按下鼠标
-  board.onmousedown = function(a){
-    var x = a.clientX;
-    var y = a.clientY;
+function userListening(board){
+//特性检测
+if(document.body.ontouchstart !== undefined){
+  //触屏设备
+  //按下屏幕
+  document.body.style.overflow='hidden';  
+  board.ontouchstart = function(a){
+  var x = a.touches[0].clientX;
+  var y = a.touches[0].clientY;
+  using = true;
+  if(eraserEnabled){
+    context.clearRect(x-5,y-5,10,10);
+  }else{
+    drawCircle(x,y,1);
+    lastPoint = {"x":x,"y":y}
+  }
+}
+//移动手指
+board.ontouchmove = function(a){
+  var x = a.touches[0].clientX;
+  var y = a.touches[0].clientY;
+  if(!using){ return }
+  if(eraserEnabled){
+    context.clearRect(x-5,y-5,10,10);
+  }else{
     using = true;
-    if(eraserEnabled){
-      context.clearRect(x-5,y-5,10,10);
-    }else{
-      drawCircle(x,y,1);
-      lastPoint = {"x":x,"y":y}
-    }
+    var newPoint = {"x":x,"y":y}
+    drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
+    lastPoint = newPoint;
   }
-  //动鼠标
-  board.onmousemove = function(a){
-    var x = a.clientX;
-    var y = a.clientY;
-    if(!using){ return }
-    if(eraserEnabled){
-        context.clearRect(x-5,y-5,10,10);
-    }else{
-        using = true;
-        var newPoint = {"x":x,"y":y}
-        drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
-        lastPoint = newPoint;
-      }
-    }
-  //松开鼠标
-  board.onmouseup = function(a){
-    using = false;
+}
+//松开手指
+board.ontouchend = function(a){
+  using = false;
+}
+}else{
+//非触屏设备
+//按下鼠标
+board.onmousedown = function(a){
+  var x = a.clientX;
+  var y = a.clientY;
+  using = true;
+  if(eraserEnabled){
+    context.clearRect(x-5,y-5,10,10);
+  }else{
+    drawCircle(x,y,1);
+    lastPoint = {"x":x,"y":y}
   }
+}
+//动鼠标
+board.onmousemove = function(a){
+  var x = a.clientX;
+  var y = a.clientY;
+  if(!using){ return }
+  if(eraserEnabled){
+    context.clearRect(x-5,y-5,10,10);
+  }else{
+    using = true;
+    var newPoint = {"x":x,"y":y}
+    drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
+    lastPoint = newPoint;
+  }
+}
+//松开鼠标
+board.onmouseup = function(a){
+  using = false;
+}
+}
 }
 var eraser = document.getElementById('eraser');
 var eraserEnabled = false;
@@ -81,3 +118,4 @@ function model(board){
     }
   }
 }
+

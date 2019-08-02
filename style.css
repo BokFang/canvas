@@ -22,3 +22,11 @@
 .actions.x > #eraser{
   display: none;
 }
+button{
+  border-radius: 10px;
+  width: 75px;
+  height:35px;
+  background-color: rgb(220, 127, 243);
+  border-color: rgb(220, 127, 243);
+  color:#fff;
+}
