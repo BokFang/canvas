@@ -1,20 +1,20 @@
-var board = document.getElementById("canvas");
-var context = board.getContext("2d");
-autoCanvasSet(board);
-userListening(board);
-model(board);
+var board = document.getElementById("canvas")
+var context = board.getContext("2d")
+autoCanvasSet(board)
+userListening(board)
+model(board)
 function drawCircle(x,y,R){
-  context.beginPath();
-  context.arc(x, y, R, 0, 2 * Math.PI);
-  context.fill();
+  context.beginPath()
+  context.arc(x, y, R, 0, 2 * Math.PI)
+  context.fill()
 }
 function drawLine(x1,y1,x2,y2){
-  context.beginPath();
-  context.moveTo(x1, y1);
-  context.lineWidth = 5;
-  context.lineTo(x2, y2);
-  context.stroke();
-  context.closePath();
+  context.beginPath()
+  context.moveTo(x1, y1)
+  context.lineWidth = 5
+  context.lineTo(x2, y2)
+  context.stroke()
+  context.closePath()
 }
 var using = false;
 var lastPoint = {x:undefined,y:undefined}
@@ -104,18 +104,57 @@ function fullScreen(){
   board.height = pageHeight;
 }
 }
+//工具选择
 var pen = document.getElementById('pen');
 var actions = document.getElementById('actions');
 function model(board){
   window.onload = function(){
     eraser.onclick = function(){
       eraserEnabled = true;
-      actions.className = 'actions x';
+      eraser.classList.add('active')
+      pen.classList.remove('active')
+      
     }
     pen.onclick = function(){
       eraserEnabled = false;
-      actions.className = 'actions';
+      pen.classList.add('active')
+      eraser.classList.remove('active')
     }
   }
 }
+//颜色选择
+black.onclick = function(){
+  context.fillStyle = 'black'
+  context.strokeStyle = 'black'
+  black.classList.add('active')
+  red.classList.remove('active')
+  green.classList.remove('active')
+  blue.classList.remove('active')
+}
+red.onclick = function(){
+  context.fillStyle = 'red'
+  context.strokeStyle = 'red'
+  black.classList.remove('active')
+  red.classList.add('active')
+  green.classList.remove('active')
+  blue.classList.remove('active')
+}
+green.onclick = function(){
+  context.fillStyle = 'green'
+  context.strokeStyle = 'green'
+  black.classList.remove('active')
+  red.classList.remove('active')
+  green.classList.add('active')
+  blue.classList.remove('active')
+}
+blue.onclick = function(){
+  context.fillStyle = 'blue'
+  context.strokeStyle = 'blue'
+  black.classList.remove('active')
+  red.classList.remove('active')
+  green.classList.remove('active')
+  blue.classList.add('active')
+}
+
+
 

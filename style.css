@@ -2,31 +2,57 @@
   padding: 0;
   margin: 0;
 }
+ul li{
+  list-style: none;
+}
+.icon {
+  width: 1.5em; height: 1.5em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 #canvas{
-  background: #04f7ff;
+  background: #fff;
 }
 .actions{
   position: fixed;
   top: 0;
   left: 0;
+  margin:20px;
 }
-.actions > #eraser{
-  display: inline-block;
+.actions svg{
+  margin: 0 10px;
 }
-.actions > #pen{
-  display: none;
+.actions svg.active{
+  fill:red;
+  transform: scale(1.2);
+  transition: 0.3s;
 }
-.actions.x > #pen{
-  display: inline-block;
+.color{
+  position: fixed;
+  top:65px;
+  left:30px;
 }
-.actions.x > #eraser{
-  display: none;
+.color li{
+  width: 20px;
+  height: 20px;
+  border:1px solid black;
+  margin-top: 15px;
+  border-radius: 50%;
+  border:2px solid #ccc;
 }
-button{
-  border-radius: 10px;
-  width: 75px;
-  height:35px;
-  background-color: rgb(220, 127, 243);
-  border-color: rgb(220, 127, 243);
-  color:#fff;
+.color li.active{
+  transform:scale(1.2);
+  transition: 0.3s;
+}
+.black{
+  background-color: black;
+}
+.red{
+  background-color: red;
+}
+.green{
+  background-color: green;
+}.blue{
+  background-color: blue;
 }
