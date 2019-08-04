@@ -13,6 +13,7 @@ ul li{
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+  cursor: pointer;
 }
 #canvas{
   background: #fff;
@@ -43,6 +44,7 @@ ul li{
   margin-top: 15px;
   border-radius: 50%;
   border:2px solid #ccc;
+  cursor: pointer;
 }
 .color li.active{
   transform:scale(1.2);
@@ -58,4 +60,23 @@ ul li{
   background-color: green;
 }.blue{
   background-color: blue;
+}
+.size{
+  position: fixed;
+  top: 30px;
+  right: 20px;
+}
+.size>li{
+  margin: 20px 0;
+  cursor: pointer;
+}
+.size>.thin{
+  height: 5px;
+  width: 15px;
+  background-color: black;
+}
+.size>.thick{
+  height: 8px;
+  width: 15px;
+  background-color: black;
 }
