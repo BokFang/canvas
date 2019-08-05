@@ -17,7 +17,7 @@ ul li{
 }
 #canvas{
   background: #fff;
-  position:fix;
+  position:fixed;
   top:0;
   left: 0;
 }
