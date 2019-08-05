@@ -1,4 +1,4 @@
-document.body .ontouchstart = function(s){
+document.body.ontouchstart = function(s){
   s.preventDefault()
 }
 var board = document.getElementById("canvas")
