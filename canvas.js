@@ -1,6 +1,3 @@
-document.body.ontouchstart = function(s){
-  s.preventDefault()
-}
 var board = document.getElementById("canvas")
 var context = board.getContext("2d")
 autoCanvasSet(board)

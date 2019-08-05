@@ -1,7 +1,6 @@
 *{
   padding: 0;
   margin: 0;
-  touch-action: none;
 }
 body{
   overflow: hidden;
@@ -18,6 +17,9 @@ ul li{
 }
 #canvas{
   background: #fff;
+  position:fix;
+  top:0;
+  left: 0;
 }
 .actions{
   position: fixed;
