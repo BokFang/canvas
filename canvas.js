@@ -164,4 +164,11 @@ thick.onclick = function(){
 clear.onclick = function(){
   context.clearRect(0, 0, board.width, board.height)
 }
-
+download.onclick = function(){
+  var url = board.toDataURL("image/png")
+  var a = document.createElement('a')
+  document.body.appendChild(a)
+  a.href = url 
+  a.download = 'image'
+  a.click()
+}
