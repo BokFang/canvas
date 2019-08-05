@@ -1,3 +1,6 @@
+document.body .ontouchstart = function(s){
+  s.preventDefault()
+}
 var board = document.getElementById("canvas")
 var context = board.getContext("2d")
 autoCanvasSet(board)
@@ -155,15 +158,18 @@ blue.onclick = function(){
   green.classList.remove('active')
   blue.classList.add('active')
 }
+//画笔粗细选择
 thin.onclick = function(){
   lineWidth = 5
 }
 thick.onclick = function(){
   lineWidth = 8
 }
+//清屏
 clear.onclick = function(){
   context.clearRect(0, 0, board.width, board.height)
 }
+//下载图画
 download.onclick = function(){
   var url = board.toDataURL("image/png")
   var a = document.createElement('a')
