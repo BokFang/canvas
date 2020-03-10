@@ -1,9 +1,9 @@
-var board = document.getElementById("canvas")
-var context = board.getContext("2d")
+let board = document.getElementById("canvas")
+let context = board.getContext("2d")
 autoCanvasSet(board)
 userListening(board)
 model(board)
-var lineWidth = 5
+let lineWidth = 6
 function drawCircle(x,y,R){
   context.beginPath()
   context.arc(x, y, R, 0, 2 * Math.PI)
@@ -17,8 +17,8 @@ function drawLine(x1,y1,x2,y2){
   context.stroke()
   context.closePath()
 }
-var using = false
-var lastPoint = {x:undefined,y:undefined}
+let using = false
+let lastPoint = {x:undefined,y:undefined}
 function userListening(board){
 //特性检测
 if(document.body.ontouchstart !== undefined){
@@ -26,8 +26,8 @@ if(document.body.ontouchstart !== undefined){
   //按下屏幕
   document.body.style.overflow='hidden';  
   board.ontouchstart = function(a){
-  var x = a.touches[0].clientX
-  var y = a.touches[0].clientY
+  let x = a.touches[0].clientX
+  let y = a.touches[0].clientY
   using = true
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10);
@@ -38,14 +38,14 @@ if(document.body.ontouchstart !== undefined){
 }
 //移动手指
 board.ontouchmove = function(a){
-  var x = a.touches[0].clientX
-  var y = a.touches[0].clientY
+  let x = a.touches[0].clientX
+  let y = a.touches[0].clientY
   if(!using){ return }
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10)
   }else{
     using = true
-    var newPoint = {"x":x,"y":y}
+    let newPoint = {"x":x,"y":y}
     drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
     lastPoint = newPoint
   }
@@ -57,9 +57,9 @@ board.ontouchend = function(a){
 }else{
 //非触屏设备
 //按下鼠标
-board.onmousedown = function(a){
-  var x = a.clientX
-  var y = a.clientY
+board.addEventListener('mousedown',(a)=>{
+  let x = (a.clientX - 40)
+  let y = (a.clientY - 60)
   using = true
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10)
@@ -67,111 +67,89 @@ board.onmousedown = function(a){
     drawCircle(x,y,1)
     lastPoint = {"x":x,"y":y}
   }
-}
+})
 //动鼠标
-board.onmousemove = function(a){
-  var x = a.clientX
-  var y = a.clientY
+board.addEventListener('mousemove',(a)=>{
+  let x = (a.clientX - 40)
+  let y = (a.clientY - 60)
   if(!using){ return }
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10)
   }else{
     using = true
-    var newPoint = {"x":x,"y":y}
+    let newPoint = {"x":x,"y":y}
     drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
     lastPoint = newPoint
   }
-}
+}) 
 //松开鼠标
-board.onmouseup = function(a){
+board.addEventListener('mouseup',(a)=>{
   using = false
+})
 }
 }
-}
-var eraser = document.getElementById('eraser')
-var eraserEnabled = false
+let eraser = document.getElementById('eraser')
+let eraserEnabled = false
 eraser.onclick = function(){
   eraserEnabled = !eraserEnabled;
 }
 function autoCanvasSet(board){
-  fullScreen()
-window.onresize = function(){
-  fullScreen()
-}
-function fullScreen(){
-  var pageWidth = document.documentElement.clientWidth
-  var pageHeight = document.documentElement.clientHeight
-  board.width = pageWidth
-  board.height = pageHeight
-}
+  board.width = '900'
+  board.height = '600'
 }
 //工具选择
-var pen = document.getElementById('pen')
-var actions = document.getElementById('actions')
+let pen = document.getElementById('pen')
+let actions = document.getElementById('actions')
 function model(board){
   window.onload = function(){
-    eraser.onclick = function(){
+    eraser.addEventListener('click',()=>{
       eraserEnabled = true
       eraser.classList.add('active')
       pen.classList.remove('active')
-    }
-    pen.onclick = function(){
+    })
+    pen.addEventListener('click',()=>{
       eraserEnabled = false
       pen.classList.add('active')
       eraser.classList.remove('active')
-    }
+    })
   }
 }
 //颜色选择
-black.onclick = function(){
-  context.fillStyle = 'black'
-  context.strokeStyle = 'black'
-  black.classList.add('active')
-  red.classList.remove('active')
-  green.classList.remove('active')
-  blue.classList.remove('active')
+let allColor = ['red','orange','yellow','green','aqua','blue','purple','black','white']
+for(let i = 0; i < allColor.length;i++){
+  let li = document.createElement('li')
+  li.className = allColor[i]
+  color.appendChild(li)
+  li.addEventListener('click',()=>{
+    context.fillStyle = allColor[i]
+    context.strokeStyle = allColor[i]
+    liveColor.style.background = allColor[i]
+  })
 }
-red.onclick = function(){
-  context.fillStyle = 'red'
-  context.strokeStyle = 'red'
-  black.classList.remove('active')
-  red.classList.add('active')
-  green.classList.remove('active')
-  blue.classList.remove('active')
-}
-green.onclick = function(){
-  context.fillStyle = 'green'
-  context.strokeStyle = 'green'
-  black.classList.remove('active')
-  red.classList.remove('active')
-  green.classList.add('active')
-  blue.classList.remove('active')
-}
-blue.onclick = function(){
-  context.fillStyle = 'blue'
-  context.strokeStyle = 'blue'
-  black.classList.remove('active')
-  red.classList.remove('active')
-  green.classList.remove('active')
-  blue.classList.add('active')
-}
+
+
 //画笔粗细选择
-thin.onclick = function(){
-  lineWidth = 5
-}
-thick.onclick = function(){
-  lineWidth = 8
+let allSize = [1,2,3,4,5,6]
+for(let i = 0;i < allSize.length;i++){
+  let li = document.createElement('li')
+  li.className = `size${allSize[i]}`
+  li.textContent = i+1
+  size.appendChild(li)
+  li.addEventListener('click',()=>{
+    lineWidth = (i+1)*2
+    liveSize.innerText = i+1
+  })
 }
 //清屏
-clear.onclick = function(){
+clear.addEventListener('click',()=>{
   context.clearRect(0, 0, board.width, board.height)
-}
+})
 //下载图画
-download.onclick = function(){
-  var url = board.toDataURL("image/png")
-  var a = document.createElement('a')
+download.addEventListener('click',()=>{
+  let url = board.toDataURL("image/png")
+  let a = document.createElement('a')
   document.body.appendChild(a)
   a.href = url 
   a.download = 'image'
   a.click()
-}
+})
