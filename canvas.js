@@ -4,18 +4,21 @@ autoCanvasSet(board)
 userListening(board)
 model(board)
 let lineWidth = 6
+let initialColor = 'black'
 function drawCircle(x,y,R){
   context.beginPath()
   context.arc(x, y, R, 0, 2 * Math.PI)
   context.fill()
 }
 function drawLine(x1,y1,x2,y2){
+  context.strokeStyle = initialColor
   context.beginPath()
   context.moveTo(x1, y1)
   context.lineWidth = lineWidth
   context.lineTo(x2, y2)
   context.stroke()
   context.closePath()
+  context.stroke()
 }
 let using = false
 let lastPoint = {x:undefined,y:undefined}
@@ -102,6 +105,7 @@ let pen = document.getElementById('pen')
 let actions = document.getElementById('actions')
 function model(board){
   window.onload = function(){
+    pen.classList.add('active')
     eraser.addEventListener('click',()=>{
       eraserEnabled = true
       eraser.classList.add('active')
@@ -123,13 +127,14 @@ for(let i = 0; i < allColor.length;i++){
   li.addEventListener('click',()=>{
     context.fillStyle = allColor[i]
     context.strokeStyle = allColor[i]
+    initialColor = allColor[i]
     liveColor.style.background = allColor[i]
   })
 }
 
 
 //画笔粗细选择
-let allSize = [1,2,3,4,5,6]
+let allSize = [1,2,3,4]
 for(let i = 0;i < allSize.length;i++){
   let li = document.createElement('li')
   li.className = `size${allSize[i]}`
