@@ -23,42 +23,6 @@ function drawLine(x1,y1,x2,y2){
 let using = false
 let lastPoint = {x:undefined,y:undefined}
 function userListening(board){
-//特性检测
-if(document.body.ontouchstart !== undefined){
-  //触屏设备
-  //按下屏幕
-  document.body.style.overflow='hidden';  
-  board.ontouchstart = function(a){
-  let x = a.touches[0].clientX
-  let y = a.touches[0].clientY
-  using = true
-  if(eraserEnabled){
-    context.clearRect(x-5,y-5,10,10);
-  }else{
-    drawCircle(x,y,1)
-    lastPoint = {"x":x,"y":y}
-  }
-}
-//移动手指
-board.ontouchmove = function(a){
-  let x = a.touches[0].clientX
-  let y = a.touches[0].clientY
-  if(!using){ return }
-  if(eraserEnabled){
-    context.clearRect(x-5,y-5,10,10)
-  }else{
-    using = true
-    let newPoint = {"x":x,"y":y}
-    drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
-    lastPoint = newPoint
-  }
-}
-//松开手指
-board.ontouchend = function(a){
-  using = false
-}
-}else{
-//非触屏设备
 //按下鼠标
 board.addEventListener('mousedown',(a)=>{
   let x = (a.clientX - 40)
@@ -85,11 +49,11 @@ board.addEventListener('mousemove',(a)=>{
     lastPoint = newPoint
   }
 }) 
+
 //松开鼠标
 board.addEventListener('mouseup',(a)=>{
   using = false
 })
-}
 }
 let eraser = document.getElementById('eraser')
 let eraserEnabled = false
@@ -158,3 +122,17 @@ download.addEventListener('click',()=>{
   a.download = 'image'
   a.click()
 })
+//canvas节流
+function throttle(fn,delay){
+  let timer = null
+  return function(){
+    let context = this
+    let args = arguments
+    if(!timer){
+      timer = setTimeout(function(){
+        fn(context,args)
+        timer = null
+      },delay)
+    }
+  }
+}
