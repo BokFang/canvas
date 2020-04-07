@@ -1,9 +1,15 @@
 let board = document.getElementById("canvas")
 let context = board.getContext("2d")
-autoCanvasSet(board)
+autoCanvasSet()
 userListening(board)
 model(board)
-let lineWidth = 6
+window.onresize = ()=>{
+  let changeCanvas = window.confirm('改变窗口大小会导致画板清空！请确定是否改变？')
+  if(changeCanvas){
+    autoCanvasSet()
+  }else {}
+}
+let lineWidth = 4
 let initialColor = 'black'
 function drawCircle(x,y,R){
   context.beginPath()
@@ -25,8 +31,8 @@ let lastPoint = {x:undefined,y:undefined}
 function userListening(board){
 //按下鼠标
 board.addEventListener('mousedown',(a)=>{
-  let x = (a.clientX - 40)
-  let y = (a.clientY - 60)
+  let x = (a.clientX + 14)
+  let y = (a.clientY + 29)
   using = true
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10)
@@ -37,8 +43,8 @@ board.addEventListener('mousedown',(a)=>{
 })
 //动鼠标
 board.addEventListener('mousemove',(a)=>{
-  let x = (a.clientX - 40)
-  let y = (a.clientY - 60)
+  let x = (a.clientX + 14)
+  let y = (a.clientY + 29)
   if(!using){ return }
   if(eraserEnabled){
     context.clearRect(x-5,y-5,10,10)
@@ -55,14 +61,18 @@ board.addEventListener('mouseup',(a)=>{
   using = false
 })
 }
+//橡皮功能
 let eraser = document.getElementById('eraser')
 let eraserEnabled = false
 eraser.onclick = function(){
   eraserEnabled = !eraserEnabled;
 }
-function autoCanvasSet(board){
-  board.width = '900'
-  board.height = '600'
+//窗口重置
+function autoCanvasSet(){
+  let pageWidth = document.documentElement.clientWidth
+  let pageHeight = document.documentElement.clientHeight
+  board.width = pageWidth
+  board.height = pageHeight
 }
 //工具选择
 let pen = document.getElementById('pen')
@@ -74,11 +84,13 @@ function model(board){
       eraserEnabled = true
       eraser.classList.add('active')
       pen.classList.remove('active')
+      board.style.cursor = 'url(./images/eraser.ico),auto'
     })
     pen.addEventListener('click',()=>{
       eraserEnabled = false
       pen.classList.add('active')
       eraser.classList.remove('active')
+      board.style.cursor = 'url(./images/pen.ico),auto'
     })
   }
 }
@@ -95,8 +107,6 @@ for(let i = 0; i < allColor.length;i++){
     liveColor.style.background = allColor[i]
   })
 }
-
-
 //画笔粗细选择
 let allSize = [1,2,3,4]
 for(let i = 0;i < allSize.length;i++){
@@ -122,17 +132,19 @@ download.addEventListener('click',()=>{
   a.download = 'image'
   a.click()
 })
-//canvas节流
-function throttle(fn,delay){
-  let timer = null
-  return function(){
-    let context = this
-    let args = arguments
-    if(!timer){
-      timer = setTimeout(function(){
-        fn(context,args)
-        timer = null
-      },delay)
-    }
+//工具栏收放
+let toolbar = false
+setting.addEventListener('click',()=>{
+  if(!toolbar){
+   tools.style.zIndex = '2'
+    tools.style.opacity = '1'
+    toolbar = !toolbar
+  }else{
+    tools.style.opacity = '0'
+    toolbar = !toolbar
+    setTimeout(()=>{
+      tools.style.zIndex = '-1'
+    },800)
   }
-}
+})
+
