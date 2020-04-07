@@ -1,7 +1,7 @@
 let board = document.getElementById("canvas")
 let context = board.getContext("2d")
 autoCanvasSet()
-userListening(board)
+listenToUser(board)
 model(board)
 window.onresize = ()=>{
   let changeCanvas = window.confirm('改变窗口大小会导致画板清空！请确定是否改变？')
@@ -26,41 +26,77 @@ function drawLine(x1,y1,x2,y2){
   context.closePath()
   context.stroke()
 }
-let using = false
-let lastPoint = {x:undefined,y:undefined}
-function userListening(board){
-//按下鼠标
-board.addEventListener('mousedown',(a)=>{
-  let x = (a.clientX + 14)
-  let y = (a.clientY + 29)
-  using = true
-  if(eraserEnabled){
-    context.clearRect(x-5,y-5,10,10)
+function listenToUser(board){
+  let using = false
+  let lastPoint = {x:undefined,y:undefined}
+  //特性检测
+  if(document.body.ontouchstart !== undefined){
+    //触屏设备
+    console.log('触屏设备')
+    board.addEventListener('touchstart',(a)=>{
+      let x = (a.touches[0].clientX)
+      let y = (a.touches[0].clientY)
+      using = true
+      if(eraserEnabled){
+        context.clearRect(x-5,y-5,10,10)
+      }else{
+        drawCircle(x,y,1)
+        lastPoint = {"x":x,"y":y}
+      }
+    })
+    board.addEventListener('touchmove',(a)=>{
+      let x = (a.touches[0].clientX)
+      let y = (a.touches[0].clientY)
+      if(!using){ return }
+      if(eraserEnabled){
+        context.clearRect(x-5,y-5,10,10)
+      }else{
+        using = true
+        let newPoint = {"x":x,"y":y}
+        drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
+        lastPoint = newPoint
+      }
+    })
+    board.addEventListener('touchend',()=>{
+      using = false
+    })
   }else{
-    drawCircle(x,y,1)
-    lastPoint = {"x":x,"y":y}
-  }
-})
+    console.log('非触屏设备')
+    //非触屏设备
+    //按下鼠标
+    board.addEventListener('mousedown',(a)=>{
+      let x = (a.clientX + 14)
+      let y = (a.clientY + 29)
+      using = true
+      if(eraserEnabled){
+        context.clearRect(x-5,y-5,10,10)
+      }else{
+        drawCircle(x,y,1)
+        lastPoint = {"x":x,"y":y}
+      }
+    })
 //动鼠标
-board.addEventListener('mousemove',(a)=>{
-  let x = (a.clientX + 14)
-  let y = (a.clientY + 29)
-  if(!using){ return }
-  if(eraserEnabled){
-    context.clearRect(x-5,y-5,10,10)
-  }else{
-    using = true
-    let newPoint = {"x":x,"y":y}
-    drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
-    lastPoint = newPoint
-  }
-}) 
+    board.addEventListener('mousemove',(a)=>{
+      let x = (a.clientX + 14)
+      let y = (a.clientY + 29)
+      if(!using){ return }
+      if(eraserEnabled){
+        context.clearRect(x-5,y-5,10,10)
+      }else{
+        using = true
+        let newPoint = {"x":x,"y":y}
+        drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y)
+        lastPoint = newPoint
+      }
+    })
 
 //松开鼠标
-board.addEventListener('mouseup',(a)=>{
-  using = false
-})
+    board.addEventListener('mouseup',(a)=>{
+      using = false
+    })
+  }
 }
+
 //橡皮功能
 let eraser = document.getElementById('eraser')
 let eraserEnabled = false
@@ -121,7 +157,10 @@ for(let i = 0;i < allSize.length;i++){
 }
 //清屏
 clear.addEventListener('click',()=>{
-  context.clearRect(0, 0, board.width, board.height)
+  let clear = confirm('是否清屏？')
+  if(clear){
+    context.clearRect(0, 0, board.width, board.height)
+  }else{}
 })
 //下载图画
 download.addEventListener('click',()=>{
@@ -144,7 +183,50 @@ setting.addEventListener('click',()=>{
     toolbar = !toolbar
     setTimeout(()=>{
       tools.style.zIndex = '-1'
-    },800)
+    },500)
   }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
